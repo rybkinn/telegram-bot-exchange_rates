@@ -1,4 +1,6 @@
 env/*
-config.py
 __pycache__/*
 .vscode/*
+
+config.py
+test_cbr.xml
