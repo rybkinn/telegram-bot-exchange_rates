@@ -42,20 +42,23 @@ def parce_cryptocurrency(cryptocurrencies: tuple, towards: tuple) -> str:
     """
     Some description.
     """
-    CRYPTOCURRENCIES_INFO = {
-        "BTC": "Bitcoin",
-        "ETH": "Ethereum"
-    }
 
     towards_string = ",".join(towards)
     parsed_information = str()
     for crypto_type in cryptocurrencies:
-        compiled_link = f"https://min-api.cryptocompare.com/data/price?fsym={crypto_type}&tsyms={towards_string}"
+        compiled_link = \
+        f"https://min-api.cryptocompare.com/data/price?fsym={crypto_type}&tsyms={towards_string}"
         r = requests.get(compiled_link)
         for towards_type in towards:
-            if towards_type == towards[0]:
-                parsed_information += f"{CRYPTOCURRENCIES_INFO[crypto_type]} - {r.json()[towards_type]} {towards_type}\n"
-                current_space = parsed_information.index("-") + 2
+            price = str(r.json()[towards_type])
+            remainder = None
+            if "." in price:
+                temp_price, remainder = price.split(".")
             else:
-                parsed_information += (" " * current_space) + f"{r.json()[towards_type]} {towards_type}\n"
+                temp_price = price
+            price = '{0:,}'.format(int(temp_price)).replace(',', ' ')
+            if remainder is not None:
+                price = price + "." + remainder
+            parsed_information += f"{crypto_type}-{towards_type} = {price} \n"
+        parsed_information += "\n"
     return parsed_information
