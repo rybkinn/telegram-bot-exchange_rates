@@ -1,6 +1,7 @@
 # Python telegram bot "Exchange rates".
 # Powered by Nikita Rybkin.
 import logging
+import datetime
 
 from aiogram import Bot, Dispatcher, executor, types
 
@@ -27,13 +28,15 @@ async def send_welcome(message: types.Message):
 @dp.callback_query_handler(text = 'course_btn')
 async def course_callback_handler(callback_query: types.CallbackQuery):
 
+    date = datetime.datetime.now().date().strftime("%d.%m.%Y")
+
     cryptocurrencies = ("BTC", "ETH")
     towards = ("USD", "RUR")
 
     monetary_rates = parse_sites.parse_monetary_currency()
     crypto_rates = parse_sites.parce_cryptocurrency(cryptocurrencies, towards)
-    return_text = "99.99.9999\n\n" + \
-                  "Курс валют:\n" + ("=" * 10) + "\n" + monetary_rates + \
+    return_text = f"{date}\n\n" + \
+                  "Курс валют (к рублю):\n" + ("=" * 10) + "\n" + monetary_rates + \
                   "\n\n" + \
                   "Курс криптовалют:\n" + ("=" * 16) + "\n" + crypto_rates
 
