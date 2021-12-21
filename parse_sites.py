@@ -30,22 +30,27 @@ def parse_monetary_currency() -> str:
 
     parsed_information = str()
 
-    # r = requests.get("https://www.cbr.ru/scripts/XML_daily.asp")
-    # html = bs(r.content, "lxml")
+    r = requests.get("https://www.cbr.ru/scripts/XML_daily.asp")
+    src = bs(r.content, "lxml")
 
-    with open("test_cbr.xml", "r") as xml_file:
-        src = bs(xml_file.read(), 'lxml')
-        for valute_type, parameters in VALUTE_INFO.items():
-            price = str(src.find("valute", id=parameters['id']).find("value"))[7:-8]
-            parsed_information += f"{valute_type} = {price} ({parameters['description']})"
+    for valute_type, parameters in VALUTE_INFO.items():
+        price = str(src.find("valute", id=parameters['id']).find("value"))[7:-8]
+        parsed_information += f"{valute_type} = <b>{price}</b> ({parameters['description']})\n"
     
     return parsed_information
 
 
 def parce_cryptocurrency(cryptocurrencies: tuple, towards: tuple) -> str:
     """
-    Some description.
+    Accepts the types of cryptocurrencies and the types of currencies 
+    to be brought to. Returns the current course.
+    Site api - https://min-api.cryptocompare.com.
     """
+
+    CRIPTOVALUTE_INFO = {
+        "BTC": "Bitcoin",
+        "ETH": "Ethereum"
+    }
 
     towards_string = ",".join(towards)
     parsed_information = str()
@@ -53,6 +58,7 @@ def parce_cryptocurrency(cryptocurrencies: tuple, towards: tuple) -> str:
         compiled_link = \
         f"https://min-api.cryptocompare.com/data/price?fsym={crypto_type}&tsyms={towards_string}"
         r = requests.get(compiled_link)
+        parsed_information += f"{CRIPTOVALUTE_INFO[crypto_type]}:\n"
         for towards_type in towards:
             price = str(r.json()[towards_type])
             remainder = None
@@ -63,6 +69,6 @@ def parce_cryptocurrency(cryptocurrencies: tuple, towards: tuple) -> str:
             price = '{0:,}'.format(int(temp_price)).replace(',', ' ')
             if remainder is not None:
                 price = price + "." + remainder
-            parsed_information += f"{crypto_type}-{towards_type} = {price} \n"
+            parsed_information += f"    {towards_type} = <b>{price}</b> \n"
         parsed_information += "\n"
     return parsed_information
