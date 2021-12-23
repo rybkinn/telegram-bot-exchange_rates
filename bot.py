@@ -7,7 +7,6 @@ import os
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types.message import ParseMode
 
-import config
 import parse_sites
 import keyboards
 
@@ -18,6 +17,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Initialize bot and dispatcher
 if os.getenv('TELEGRAM_BOT_EXCHANGE_RATES') is None:
+    import config
     bot = Bot(token=config.API_TOKEN, proxy=config.PROXY_URL)
 else:
     bot = Bot(token=os.getenv('TELEGRAM_BOT_EXCHANGE_RATES'))
