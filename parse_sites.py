@@ -12,16 +12,17 @@ def parse_monetary_currency() -> str:
         "USD": {
             "id": "R01235",
             "description": "Доллар США",
-            "emoji": ":us:"
+            "nominal": 1
         },
         "EUR": {
             "id": "R01239",
             "description": "Евро",
-            "emoji": ":us:"
+            "nominal": 1
         },
         "UAH": {
             "id": "R01720",
-            "description": "Украинских гривен"
+            "description": "Украинских гривен",
+            "nominal": 10
         }
     }
 
@@ -29,7 +30,9 @@ def parse_monetary_currency() -> str:
     r = requests.get("https://www.cbr.ru/scripts/XML_daily.asp")
     src = bs(r.content, "lxml")
     for valute_type, parameters in VALUTE_INFO.items():
-        price = str(src.find("valute", id=parameters['id']).find("value"))[7:-8]
+        price_parsed = str(src.find("valute", id=parameters['id']).find("value"))[7:-8]
+        price_parsed = float(price_parsed.replace(",", "."))
+        price = str(round((price_parsed / parameters['nominal']), 4))
         parsed_information += f"{valute_type} = <b>{price}</b> ({parameters['description']})\n"
     return parsed_information
 
