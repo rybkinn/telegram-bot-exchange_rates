@@ -2,6 +2,7 @@
 # Powered by Nikita Rybkin.
 import logging
 import datetime
+import os
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types.message import ParseMode
@@ -16,7 +17,10 @@ logging.basicConfig(level=logging.INFO)
 
 
 # Initialize bot and dispatcher
-bot = Bot(token=config.API_TOKEN, proxy=config.PROXY_URL)
+if os.getenv('TELEGRAM_BOT_EXCHANGE_RATES') is None:
+    bot = Bot(token=config.API_TOKEN, proxy=config.PROXY_URL)
+else:
+    bot = Bot(token=os.getenv('TELEGRAM_BOT_EXCHANGE_RATES'))
 dp = Dispatcher(bot)
 
 

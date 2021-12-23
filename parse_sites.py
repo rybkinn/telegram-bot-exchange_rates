@@ -1,7 +1,4 @@
-# Parse site https://www.cbr.ru/scripts/XML_daily.asp
 import requests
-
-import emoji
 from bs4 import BeautifulSoup as bs
 
 
@@ -29,14 +26,11 @@ def parse_monetary_currency() -> str:
     }
 
     parsed_information = str()
-
     r = requests.get("https://www.cbr.ru/scripts/XML_daily.asp")
     src = bs(r.content, "lxml")
-
     for valute_type, parameters in VALUTE_INFO.items():
         price = str(src.find("valute", id=parameters['id']).find("value"))[7:-8]
         parsed_information += f"{valute_type} = <b>{price}</b> ({parameters['description']})\n"
-    
     return parsed_information
 
 
