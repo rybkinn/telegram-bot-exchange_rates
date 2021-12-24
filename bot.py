@@ -58,10 +58,10 @@ async def info_callback_handler(callback_query: types.CallbackQuery):
     return_text = "Я беру курс валют с сайта Центрального Банка России\n" + \
                   "(https://www.cbr.ru)\n" + \
                   "Обновляется раз в день\n\n" + \
-                  "Курс криптоволюты беру с сайта\n" + \
+                  "Курс криптовалюты беру с сайта\n" + \
                   "(https://www.cryptocompare.com)\n" + \
                   "Обновляется каждые 15 секунд\n" + \
-                  ("-" * 50) + "\n" + \
+                  ("-" * 43) + "\n" + \
                   "Мой создатель - Никита Рыбкин"
 
     await bot.answer_callback_query(callback_query.id)
